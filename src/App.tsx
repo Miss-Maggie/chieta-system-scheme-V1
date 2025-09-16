@@ -9,9 +9,9 @@ import AdminDashboard from "./pages/AdminDashboard";
 import UserProfile from "./pages/UserProfile";
 import { Calendar } from "./pages/Calendar";
 import NotFound from "./pages/NotFound";
-
+import { ProtectedRoute } from "./components/ProtectedRoute";
 const queryClient = new QueryClient();
-
+import { AuthProvider } from "./context/authContext";
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -20,11 +20,31 @@ const App = () => (
       <HashRouter>
         <Routes>
           <Route path="/" element={<Auth />} />
-          <Route path="/dashboard" element={<UserDashboard />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/profile" element={<UserProfile />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute requiredRole={["employee", "executive"]}>
+                <UserDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute requiredRole={["admin", "company"]}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <UserProfile />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/calendar" element={<Calendar />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </HashRouter>

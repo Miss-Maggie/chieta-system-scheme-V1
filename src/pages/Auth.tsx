@@ -30,6 +30,7 @@ const Auth = () => {
       try {
         const res = await login(formData);
         const role = res.data.user.role;
+        localStorage.setItem("user", res.data.user);
         console.log(res);
         if (res.status == 200) {
           toast({
@@ -37,7 +38,9 @@ const Auth = () => {
             description: `Welcome back!`,
           });
         }
-        navigate(role == "admin" ? "/admin" : "/dashboard");
+        navigate(
+          role == "admin" || role == "company" ? "/admin" : "/dashboard",
+        );
       } catch (err) {
         toast({
           title: err.message,
@@ -146,7 +149,7 @@ const Auth = () => {
             </form>
 
             {/* Demo credentials */}
-            {isLogin && (
+            {/*{isLogin && (
               <div
                 className="mt-6 p-4 bg-primary/5 rounded-lg animate-fade-in border border-primary/20"
                 style={{ animationDelay: "0.6s" }}
@@ -159,7 +162,7 @@ const Auth = () => {
                   <div>Admin: admin@demo.com / admin123</div>
                 </div>
               </div>
-            )}
+            )}*/}
 
             {/* <div className="mt-6 text-center animate-fade-in" style={{ animationDelay: '0.7s' }}>
               <button
